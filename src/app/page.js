@@ -37,11 +37,10 @@ export default function Home() {
   useEffect(() => {
     //Implementing the setInterval method
     if (!paused) {
-      if (seconds == 59) {
-        setMins((prev) => prev - 1)
-      }
-
       const interval = setInterval(() => {
+        if (seconds == 0) {
+          setMins((prev) => prev - 1)
+        }
         setSeconds((prev) => (((prev - 1) % 60) + 60) % 60)
       }, 1000)
       //Clearing the interval

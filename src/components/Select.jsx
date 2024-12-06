@@ -1,28 +1,71 @@
+'use client'
 
+import { useEffect, useRef, useState } from 'react'
+import img from '../../public/SVG/smallBtn1.svg'
+import { ArrowButton } from './atoms/arrow-button'
 
-'use client';
+const Select = ({
+  options = ['25', '50', '75'],
+  value = '50',
+  handleChange = () => console.log('Expected handleChange'),
+  id,
+  label = 'label',
+}) => {
+  const color = '#CC7AE6'
 
-import { useEffect, useRef, useState } from "react";
-import img from "../../public/SVG/smallBtn1.svg"
- 
-const Select = ({setSelected =  () => alert("setSelected missed"), options = ["25", "50", "75"]}) =>{
+  const [selectedIndex, setSelectedTime] = useState(options.indexOf(value))
 
-   
-    return(
+  const handleClickUp = () => {
+    if (selectedIndex == options.length - 1) return
+    console.log(selectedIndex)
+    const newPos = (selectedIndex + 1) % options.length
+    handleChange(options[newPos])
+    setSelectedTime(newPos)
+  }
+  const handleClickDown = () => {
+    if (selectedIndex == 0) return
+    const newPos =
+      (((selectedIndex - 1) % options.length) + options.length) % options.length
+
+    handleChange(options[newPos])
+    setSelectedTime(newPos)
+  }
+  return (
     <>
-    <div className="h-full w-full flex">
-        <select onChange={(e) => setSelected(e.target.value)} name="cars" id="cars" className="w-[70%] h-full appearance-none border-2 border-[#00ff00] bg-[#00ff004b] p-2">
-            {options.map((opt, index) =>
-                <option value={opt} key={index}>{opt}</option>
-            
-            )}
-            
-        </select>
-        <svg width="30%" transform="rotate(180)" height="100%" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.2126 19.2576C12.1301 21.5491 8.86988 21.5491 7.78742 19.2576L0.831076 4.53136C-0.108997 2.54127 1.34271 0.25 3.54366 0.25L17.4563 0.25C19.6573 0.25 21.109 2.54128 20.1689 4.53136L13.2126 19.2576Z" fill="black"/>
-        </svg>
-    </div>
+      <div className="h-full w-full flex flex-col">
+        <h4 className="font-inter font-bold text-[1.2rem]">{label}</h4>
+        <div className="h-full flex flex-row">
+          <div className="h-full relative">
+            <select
+              onChange={(e) => handleChange(e.target.value)}
+              value={value}
+              name={id}
+              id={id}
+              className="w-[3.5rem] h-full appearance-none p-[0.5rem] bg-[transparent] font-inter font-bold text-[1rem]"
+              required
+            >
+              {options.map((opt, index) => (
+                <option value={opt} key={index}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <div
+              className="absolute h-full w-full top-0 pointer-events-none"
+              style={{ backgroundColor: color, opacity: 0.3 }}
+            ></div>
+          </div>
+          <div className="flex flex-col gap-[2px] justify-center">
+            <div className="h-[1rem] w-[1.5rem]">
+              <ArrowButton handleClick={handleClickUp} />
+            </div>
+            <div className="h-[1rem] w-[1.5rem]">
+              <ArrowButton orientation="down" handleClick={handleClickDown} />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
-    )
+  )
 }
 export default Select
